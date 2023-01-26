@@ -3,10 +3,12 @@ import HelloWorld from './components/HelloWorld.vue'
 </script> -->
 
 <script>
+
 export default {
-	name: 'HelloWorld',
+  
+	name: 'Questionaire',
 	props: {
-		msg: String
+		msg: Number,
 	},
 	data() {
     return {
@@ -21,6 +23,7 @@ export default {
     start: true,
     checkpoints: false,
     completed: 0,
+    coops: '',
 
     q:[
       '1. Do you often find yourself wanting more?',
@@ -75,6 +78,15 @@ export default {
       // this.setup='moop';
       // this.punchline='moop2';
       // this.fetchData();
+      console.log("Window Location:" , window.location);
+      const mykv = window.location.search;
+      console.log("key & vals:", mykv);
+      const url= new URLSearchParams(mykv);
+      const q =url.get('points');
+      this.coops = parseInt(url.get('comps'))+1000;
+      // console.log(compss);
+
+      this.points= parseInt(q);
       this.place();
       this.start=false;
     },
@@ -94,6 +106,12 @@ export default {
     sub(){
       // this.setup='j'
 
+      console.log(this.points);
+      this.$router.push('/?points='+this.points+'&comps='+this.coops);
+      
+      // this.msg=this.points;
+
+
     },
 
 
@@ -109,9 +127,9 @@ export default {
 
               <div class="top">
                   <div class="JokeTitle">
-                    <button id="backbtn">
+                    <router-link id="backbtn" to="/">
                       <img src="../assets/Questions/back-button.png">
-                    </button>
+                    </router-link>
 
                       <div class="o">
                         <h3>Questionaire</h3>
@@ -293,6 +311,7 @@ box-sizing: border-box; /*what*/
 }
 
 #backbtn{
+  text-decoration: none;
   width: 4rem;
 height: 4rem;
 padding: 0.4rem;

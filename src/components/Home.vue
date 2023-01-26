@@ -1,23 +1,96 @@
 <script>
+
   export default {
+    name: 'Home',
 	data() {
     return {
         Queststats: 'Incomplete',
         Funstats: 'Incomplete',
         Dadstats: 'Incomplete',
         Happystats: 'Incomplete',
-    }}}
+        num: 0,
+        compsso: '0000',
+    }},
+  methods:{
+    comps(pos){
+      this.pointsgetter();
+      for(let i=1;i<5;i++){
+        if(pos===i){
+          this.compsso[i-1]=i;
+        }
+      }
+    },
+    checker(){
+      // console.log("Window Location:" , window.location);
+      const mykv = window.location.search;
+      // console.log("key & vals:", mykv);
+      const url= new URLSearchParams(mykv);
+      // const score =url.get('points');
+      var p =url.get('points');
+      var compss =url.get('comps');
+      // this.compsso=compss;
+      
+      // console.log('l');
+      // var compss=this.compsso;
+      if(compss===null){
+        compss='0000';
+        // this.compsso=compss;
+      }
+      if(p===null){
+        p=0;
+        // this.compsso=compss;
+      }
+      
+      this.num=p;
+      this.compsso=compss;
+      console.log(p);
+      console.log(compss);
+      for(let i=0;i<4;i++){
+      if(compss[i]==='1'){
+          this.Queststats='Completed';
+        }
+      if(compss[i]==='2'){
+          this.Funstats='Completed';
+        }
+      if(compss[i]==='3'){
+          this.Dadstats='Completed';
+        }
+      if(compss[i]==='4'){
+          this.Happystats='Completed';
+        }}
+    },
+    pointsgetter(){
+      console.log("Window Location:" , window.location);
+      const mykv = window.location.search;
+      console.log("key & vals:", mykv);
+      const url= new URLSearchParams(mykv);
+      const score =url.get('points');
+      // turn points sytem into strings to add encripts
+
+      console.log(url);
+      console.log(compss);
+      if (score!==null){
+        this.num+=parseInt(score);
+      }
+
+
+      console.log(score);
+      console.log(this.num);
+      // this.compsso=parseInt(this.compsso);
+    }
+  }
+}
 
 </script>
 
 <template>
 <body>
-    <main>
+    <main @mouseover="checker()">
 
         <section class="glass">
             <div class="dash">
                 <div class="user">
-                    <img src="../assets/Homepage/hexagon.png" alt="logo" id="logo">
+                    <img  src="../assets/Homepage/hexagon.png" alt="logo" id="logo">
                     <div class="o">
                       <h3>Happify</h3>
                     <p>by synthesis</p>
@@ -28,17 +101,19 @@
                     <a class="pages" href="#">
                         <img src="../assets/Homepage/home.png" id="home">
                         <h2>Home</h2>
+                        <!-- profile, settings add one more thing -->
                     </a>
-                    <hr>
+
                     <a class="pages" href="#">
                       <img src="../assets/Homepage/box.png">
                         <h2>Products</h2>
                     </a>
-                    <hr>
+
                     <a class="pages" href="#">
                       <img src="../assets/Homepage/about us icon.png">
                         <h2>About Us</h2>
-                    </a>                     
+                    </a>      
+                    
                   </nav>
                   <a class="pro" href="https://www.flaticon.com/search/2?word=hexagon">
                     <h2>More Apps!</h2>
@@ -50,7 +125,7 @@
                   
                   <div class="topper">
                     <h1 style="display:inline-block;">Welcome</h1>
-                    <div class="leader">
+                    <div v-if="compsso==='1234'" class="leader">
                       <button href="#" id="lead"><p>Results</p></button>
                     </div>
                     
@@ -62,37 +137,38 @@
 
                 <div class="pairOfCards">
 
-                  <a class="card" href="#">
+                  <router-link class="card" :to="'/questionaire?points='+num+'&comps='+compsso">
 
-                    <img src="../assets/Homepage/questionnaire.png" alt="">
+                    <img src="../assets/Homepage/questionnaire.png">
                     <div class="info">
                       <h2>Questionaire</h2>
                       <p>{{ Queststats }}</p>
                     </div>
-                  </a>
-                  <a class="card" href="#">
-                  <img src="../assets/Homepage/video-camera.png" alt="">
+                  </router-link>
+                  <router-link class="card" :to="'/funnyvideos?points='+num+'&comps='+compsso">
+                  <img src="../assets/Homepage/video-camera.png">
                   <div class="info">
                     <h2>Funny videos</h2>
                     <p>{{ Funstats }}</p>
                   </div>
-                </a>
+                  </router-link>
                 </div>
                 <div class="pairOfCards">
-                  <a class="card" href="#">
-                    <img src="../assets/Homepage/joke.png" alt="">
+                  <router-link class="card" :to="'/dadjokes?points='+num+'&comps='+compsso">
+                    <img src="../assets/Homepage/joke.png">
                     <div class="info">
                       <h2>Dad jokes</h2>
                       <p>{{ Dadstats }}</p>
                     </div>
-                  </a>
-                  <a class="card" href="#">
-                  <img src="../assets/Homepage/rating.png" alt="">
+                  </router-link>
+                  <router-link class="card" :to="'/happymeter?points='+num+'&comps='+compsso">
+                  <img src="../assets/Homepage/rating.png">
                   <div class="info">
                     <h2>Happiness meter</h2>
                     <p>{{ Happystats }}</p>
                   </div>
-                </a>
+                  </router-link>
+                  
                 </div>
 
 
@@ -112,25 +188,6 @@
 
 <style scoped>
 
-*{
-    overflow: hidden;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box; /*what*/
-}
-
-
-/* background design !!! */
-
-main{
-
-  background-image: linear-gradient(#68B0D1,#99D8F5);
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .topper{
   display: flex;
@@ -138,60 +195,10 @@ main{
   justify-content: space-between;
 }
 
-.glass {
-  background: white;
-  min-height: 80vh;
-  width: 60%;
-  background: linear-gradient(
-      /* to right top, */
-      rgba(255, 255, 255, 0.144), 
-      rgba(255, 255, 255, 0.106)
-  );
-  /* background: rgba(255, 255, 255, 0.333); */
-  border-radius: 2rem;
-  border: 2px solid white;
-  z-index: 2;
-  backdrop-filter: blur(10px);
-  display: flex;
-}
 
-.circle1, .circle2, .circle3 , .circle4{
-  background-image: linear-gradient(#F9D45A,#F98F63);
-  /* width: 20rem;
-  height: 20rem; */
-  /* margin: 30px; */
-  position: absolute;
-  border-radius: 50%;
+.glass{
+  flex-direction: row;
 }
-
-.circle1 {
-  top: 1%;
-  right: 35%;
-  width: 10rem;
-  height: 10rem;
-}
-
-.circle2 {
-  bottom: 5%;
-  right: 5%;
-  height: 15rem;
-  width: 15rem;
-}
-
-.circle3 {
-  bottom: -10%;
-  left: 0%;
-  width: 20rem;
-  height: 20rem;
-}
-
-.circle4 {
-  top: 2%;
-  left: -13%;
-  width: 20rem;
-  height: 20rem;
-}
-
 
 
 
@@ -220,6 +227,12 @@ main{
   display: flex;
   text-align: left;  
   align-items: center;
+  /* margin-right: 5rem; */
+}
+
+.user img{
+
+  /* height: 6rem; */
 }
 
 .pages img {
@@ -309,6 +322,8 @@ p{
 }
 
 .cards{
+  /* margin-top: 2rem; */
+  /* if results active margintop==0 */
   padding-top: 0px;
   padding: 1.7rem;
   display: flex;
@@ -344,6 +359,11 @@ p{
 
 }
 
+.card:active{
+  background-image: linear-gradient(rgba(255, 255, 255, 0.583),rgba(255, 255, 255, 0.387));
+
+}
+
 .card:hover , #lead:hover , .pages:hover{
   background-image: linear-gradient(rgba(255, 255, 255, 0.583),rgba(255, 255, 255, 0.387));
   border-color: #ffffff;
@@ -371,7 +391,7 @@ p{
 }
 
 #lead{
-  display: none;
+  /* display: none; */
   text-decoration: none;
   text-align: center;
   width: 17rem;

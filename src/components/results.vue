@@ -1,19 +1,6 @@
 <script>
 
-// import { Buffer } from "buffer";
-// Buffer.from("anything", "base64");
-import AWS, 
-{ 
-  Rekognition, CognitoIdentityCredentials 
-} from "aws-sdk";
-
-AWS.config.region = "eu-west-1"; // Region
-AWS.config.credentials = new CognitoIdentityCredentials({
-  IdentityPoolId: "eu-west-1:60c1f516-872d-444d-8a07-98f083cdb5ce",
-});
-const rekognition = new Rekognition();
-
-
+  
 
 export default {
 
@@ -33,68 +20,13 @@ export default {
       }).catch(error => {console.log(error)})
 
     },
-    getBinary(base64Image) {
-          var binaryImg = atob(base64Image);
-          var length = binaryImg.length;
-          var ab = new ArrayBuffer(length);
-          var ua = new Uint8Array(ab);
-          for (var i = 0; i < length; i++) {
-            ua[i] = binaryImg.charCodeAt(i);
-        }
-
-        return ab;
-        },
-        
-      takePicture() {
-        for (let i=0;i<1;i++){
-            console.log('moop');
-              
-              
-              let context = this.canvas.getContext('2d')
-              context.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight)
-        this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
-        
-        var data = this.canvas.toDataURL('image/jpeg');
-        var base64Image = data.replace(/^data:image\/(png|jpeg|jpg);base64,/, '');
-        var imageBytes = this.getBinary(base64Image);
-
-        var params = {
-          Image: {
-            Bytes: imageBytes,
-            
-          },
-          Attributes: ["ALL"],
-        };
-        console.log(params);
-
-        rekognition
-        .detectFaces(params)
-      .promise()
-      .then((data) => {
-        if (data.FaceDetails && data.FaceDetails.length) {
-          if (data.FaceDetails.length > 1) {
-            data.FaceDetails.sort(
-              (face1, face2) =>
-              face2.BoundingBox.Height * face2.BoundingBox.Width -
-              face1.BoundingBox.Height * face1.BoundingBox.Width
-              );
-            }
-            
-            const rekHappyScore = data.FaceDetails[0].Emotions.filter(
-              (item) => item.Type === "HAPPY"
-              )[0]["Confidence"];
-              console.log(rekHappyScore);
-              this.prog=rekHappyScore;
-            }
-            else{
-              console.log('faces not found');
-            }
-          }).catch((err) => console.log(err, err.stack));
-          
-        }},
-        
-        
-        initCanvas() {
+    takePicture() {
+      let context = this.canvas.getContext('2d')
+      context.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight)
+      this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
+    },
+    
+    initCanvas() {
       this.canvas.setAttribute('width', this.video.videoWidth)
       this.canvas.setAttribute('height', this.video.videoHeight)
       },
@@ -107,41 +39,19 @@ export default {
               this.On='none';
           }
       },
-       sleep(){
-        return new Promise((resolve) => setTimeout(resolve,1000));
-      },
-       async started(){
+      startnow(){
         if(this.On!=='none'){
           this.start=false;
           this.subtit='Detecting Happiness';
-            // this.takePicture();
-          const that=this;
-          for (let i=0;i<10;i++){
-            console.log('moop');
-            await this.sleep();
-            this.takePicture();
-            // setTimeout(function(){
-            //   that.takePicture();
-            //     // that.counter=0;
-            // },4000);
-          }
-
-          console.log("Window Location:" , window.location);
-          const mykv = window.location.search;
-          console.log("key & vals:", mykv);
-          const url= new URLSearchParams(mykv);
-          const q =url.get('points');
-          this.points= parseInt(q);
         }
       },
       finished(){
-        this.$router.push('/?points=');
+        this.$router.push('/');
       }
   },
 
     data() {
       return {
-        points: 0,
         video: null,
         canvas: null,
         On: 'none',
@@ -149,6 +59,7 @@ export default {
         prog: 30,
         start: true,
         subtit: 'Incomplete',
+        results: 'nothing',
       }
 
 }}
@@ -176,13 +87,13 @@ export default {
 
                 <div class="topleft">
 
-                  <button v-if="start" id="srtbtn" @click="started()"><h2>Start</h2></button>
+                  <button v-if="start" id="srtbtn" @click="startnow()"><h2>Start</h2></button>
 
                   <div v-else id="aftsrt">
 
                     <progress style="margin-right: 1rem; height: 2rem;" :value="prog" max="100">30%</progress>
 
-                    <a @click="takePicture()">
+                    <a>
                       <img @click="pro" src="../assets/Happy/happy-face.png" id="happySideBtn">
                     </a>
 
@@ -198,17 +109,8 @@ export default {
 
                   <div class="happy">
                     
-                    <div class="toggles">
-                        <img v-if="start" @click="toggle()" id="toggles" src="../assets/Happy/no-camera.png" alt="">
-
-                    </div>
-
-                    <div class="noface" v-if="On==='none'">
-                      <img  id="noface" src="../assets/Happy/male.png" alt="">
-                    </div>
-
-                    <video :style="'display:'+On+';'" id="nom" ref="video" @canplay="initCanvas()">Stream unavailable</video>
-                    <canvas ref="canvas" style="display: none;"/>
+                    {{ results }}
+                    {{ $num }}
 
                   </div>
                   

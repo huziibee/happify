@@ -1,13 +1,7 @@
-<!-- <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script> -->
-
 <script>
 export default {
-	name: 'HelloWorld',
-	props: {
-		msg: String
-	},
+	name: 'Dadjokes',
+    
 	data() {
     return {
 
@@ -21,6 +15,7 @@ export default {
     start: true,
     checkpoints: false,
     completed: 0,
+    coops:0,
 
     };
   },
@@ -41,6 +36,14 @@ export default {
     started(){
       // this.setup='moop';
       // this.punchline='moop2';
+      console.log("Window Location:" , window.location);
+      const mykv = window.location.search;
+      console.log("key & vals:", mykv);
+      const url= new URLSearchParams(mykv);
+      const q =url.get('points');
+      this.points= parseInt(q);
+      this.coops = parseInt(url.get('comps'))+30;
+
       this.fetchData();
       this.start=false;
     },
@@ -58,6 +61,9 @@ export default {
 
     sub(){
       // this.setup='j'
+      console.log(this.points);
+      this.$router.push('/?points='+this.points+'&comps='+this.coops);
+      // this.$router.push('/');
 
     },
 
@@ -90,56 +96,55 @@ export default {
           <section class="glass">
 
               <div class="top">
-                  <div class="JokeTitle">
-                    <button id="backbtn">
-                      <img src="../assets/DadJokes/back-button.png">
-                    </button>
 
-                      <div class="o">
+                  <div class="JokeTitle">
+
+                    <router-link id="backbtn" to="/">
+                      <img src="../assets/DadJokes/back-button.png">
+                    </router-link>
+
+                    <div>
                         <h3>Dad Jokes</h3>
                         <p> {{completed}}/5 Completed</p>
                     </div>
+
                 </div>
 
                 <div class="topleft" >
-                  
                   <button id="jokeSideBtn">
                     <h2 v-if="start" @click="started()">Start</h2>
                     <h2 v-else-if="next" @click="nextbtn">Next</h2>
                     <h2 v-else @click="sub()">Submit</h2>
-                    <!-- <img src="./assets/copy.png" > -->
-
                   </button>
                 </div>
 
               </div>
+
               <section class="jokeSelection">
 
                 <div class="jokecontainer">
 
-                  
                   <div class="joke">
-                    <div class="topimg">
-                      <img src="../assets/DadJokes/icons8-get-quote-48.png" id="topimg">
 
-                    </div>
-                      <div class="textfield">
-                        <div class="textcentre">
-                          <div id="setupid">
+                    <img src="../assets/DadJokes/icons8-get-quote-48.png" id="topimg">
 
-                            <h2>{{ setup }}</h2>
-                          </div>
-                          <br>
-                          <div id="punch">
+                        <div class="textfield">
+                            <div class="textcentre">
 
-                            <p id="punchlineid">{{ punchline }}</p>
-                          </div>
+                            <div id="setupid">
+                                <h2>{{ setup }}</h2>
+                            </div>
+
+                            <br>
+
+                            <div id="punch">
+                                <p id="punchlineid">{{ punchline }}</p>
+                            </div>
+
+                            </div>
                         </div>
-                      </div>
-                      <div class="bottomimg">
-                        <img src="../assets/DadJokes/icons8-get-quote-48.png" >
 
-                      </div>
+                    <img id="bottomimg" src="../assets/DadJokes/icons8-get-quote-48.png" >
 
                   </div>
                   
@@ -154,338 +159,220 @@ export default {
 
           </section>
       </main>
-  
-      <div class="circle1"></div>
-      <div class="circle2"></div>
-      <div class="circle3"></div>
-      <div class="circle4"></div>      
+
+      <div class="circles">
+          <div class="circle1"></div>
+          <div class="circle2"></div>
+          <div class="circle3"></div>
+          <div class="circle4"></div>      
+      </div>
+
   </body>
-  </template>
+</template>
 
   
 <style scoped>
-*{
-margin: 0;
-padding: 0;
-box-sizing: border-box; /*what*/
-
-}
-
-#backbtn{
-  width: 4rem;
-height: 4rem;
-padding: 0.4rem;
-margin-right: 1rem;
-border-radius: 20px;
-border-color: #ffffff;
-background-color: rgba(255, 255, 255, 0.407);
-border-style: solid;
-border-width: 2px;
-
-}
-
-.topleft{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#setupid{
-  display: flex;
-  align-self: start;
-  /* width: 100%; */
-}
-
-#punch{
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  width: 80%;
-  
-  /* height: 30%;  */
-  position: absolute;
-  align-self: flex-end;
-  bottom: 1px;
-}
-
-.topimg{
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-items: flex-end; */
-  align-self: start;
-  transform: rotate(180deg);
-  margin: 1rem;
-  margin-left: 1.5rem;
-
-  /* height: 2rem; */
-  /* top: 0; */
-}
 
 
-.bottomimg{
-  /* display: flex;
-  flex-direction: column; */
-  /* justify-items: flex-end; */
-  align-self: flex-end;
-  /* margin-left: 0rem; */
-  margin: 1rem;
-  margin-right: 1.5rem;
-}
+    #backbtn{
+        width: 4rem;  
+        height: 4rem;
+        padding: 0.4rem;
+        margin-right: 1rem;
+        border-radius: 20px;
+        border-color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.407);
+        border-style: solid;
+        border-width: 2px;
 
-.textcentre{
-  overflow-y: auto;
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  /* justify-content: center;
-  align-items: center; */
-  height: 60%;
-  width: 100%;
-}
+    }
 
+    .topleft{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
 
-.textfield{
-  display: flex;
-  /* position: relative; */
-  width: 80%;
-  flex-direction: column;
-  
-  /* margin-top: 7rem;  */
-  /* how do i centre this ??*/ 
-  /* overflow-y: auto; */
-  /* scroll-margin: 2px; */
-  align-items: center;
-  justify-content: center;
-  /* text-align: right; */
-}
+    #setupid{
+    display: flex;
+    align-self: start;
+    }
 
-::-webkit-scrollbar{
-  /* border-radius: 2px; */
-  width: 10px;
-}
+    #punch{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    width: 80%;
+    position: absolute;
+    align-self: flex-end;
+    bottom: 1px;
+    }
 
-::-webkit-scrollbar-track{
-  /* border-radius: 20px; */
-  background: rgb(207, 207, 207);  
-  border-radius: 2rem;
-}
-
-::-webkit-scrollbar-thumb{
-  /* height: 2px; */
-  border-radius: 2rem;
-  /* background: rgb(154, 152, 152); */
-  background: rgb(255, 255, 255);
-}
-
-::-webkit-scrollbar-thumb:hover{
-  background: rgb(255, 255, 255);
-}
+    #topimg{
+    align-self: start;
+    transform: rotate(180deg);
+    margin: 1rem;
+    margin-left: 1.5rem;
+    width: 4rem;
+    }
 
 
-/* background design !!! */
+    #bottomimg{
+    align-self: flex-end;
+    margin: 1rem;
+    margin-right: 1.5rem;
+    width: 4rem;
+    }
 
-main{
+    .textcentre{
+    overflow-y: auto;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    height: 60%;
+    width: 100%;
+    }
 
-background-image: linear-gradient(#68B0D1,#99D8F5);
-background-repeat: no-repeat;
-min-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-}
 
-.glass {
-background: white;
-min-height: 80vh;
-width: 60%;
-background: linear-gradient(
-    /* to right top, */
-    rgba(255, 255, 255, 0.144), 
-    rgba(255, 255, 255, 0.106)
-);
-/* background: rgba(255, 255, 255, 0.333); */
-border-radius: 2rem;
-border: 2px solid white;
-z-index: 2;
-backdrop-filter: blur(10px);
-display: flex;
-flex-direction: column;
-}
-
-.circle1, .circle2, .circle3 , .circle4{
-background-image: linear-gradient(#F9D45A,#F98F63);
-/* width: 20rem;
-height: 20rem; */
-/* margin: 30px; */
-position: absolute;
-border-radius: 50%;
-}
-
-.circle1 {
-top: 1%;
-right: 35%;
-width: 10rem;
-height: 10rem;
-}
-
-.circle2 {
-bottom: 5%;
-right: 5%;
-height: 15rem;
-width: 15rem;
-}
-
-.circle3 {
-bottom: -10%;
-left: 0%;
-width: 20rem;
-height: 20rem;
-}
-
-.circle4 {
-top: 2%;
-left: -13%;
-width: 20rem;
-height: 20rem;
-}
+    .textfield{
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    }
 
 
 
-.JokeTitle{
-display: flex;
-text-align: left;  
-width: 70%;
-align-items: center;
-/* justify-content: space-between; */
-}
 
-.JokeTitle img {
-  width: 3rem;
-  height: 3rem;
-  /* background: rgb(255, 255, 255); */
-  /* border-radius: 50%; */
-  margin-right: 2rem;
-}
+    .JokeTitle{
+        display: flex;
+        text-align: left;  
+        width: 70%;
+        align-items: center;
+    }
 
-#start{
-  text-align: left;
-}
-#punchlineid {
-  text-align: right;
-}
+    .JokeTitle img {
+    width: 3rem;
+    height: 3rem;
+    margin-right: 2rem;
+    }
 
-h1{
-font-weight: 600;
-opacity: 0.8;
-font-size: 3rem;
-padding-top: 2rem;
-padding-left: 2rem;
-/* padding: 2rem; */
-/* margin: 0; */
-}
+    #start{
+    text-align: left;
+    }
+    #punchlineid {
+    text-align: right;
+    }
 
-button:hover , #jokeSideBtn:hover{
-background-image: linear-gradient(rgba(255, 255, 255, 0.583),rgba(255, 255, 255, 0.387));
-border-color: #ffffff;
-border-style: solid;
-border-width: 2px;
-}
+    button:hover , #jokeSideBtn:hover{
+    background-image: linear-gradient(rgba(255, 255, 255, 0.583),rgba(255, 255, 255, 0.387));
+    border-color: #ffffff;
+    border-style: solid;
+    border-width: 2px;
+    cursor: pointer;
+    }
 
-.top{
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 2rem;
-  padding-bottom: 0px;
-}
+    .top{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 2rem;
+    padding-bottom: 0px;
+    }
 
-.jokeSelection{
-flex: 25;
-display: flex;
-flex-direction: column;
-/* margin-top: 0.5rem; */
-/* justify-content: center; */
-align-items: center;
+    .jokeSelection{
+        flex: 25;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-}
+    .jokecontainer{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        height: 10%;
+        width: 85%; /* resize for video*/
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
 
-.jokecontainer{
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-flex: 1;
-height: 10%;
-/* padding: 5rem; */
-width: 85%; /* resize for video*/
-/* flex: 5; */
-margin-top: 2rem;
-margin-bottom: 2rem;
-/* background-color: rgba(255, 255, 255, 0.407);
-border-style: solid;
-border-color: #ffffff;
-border-width: 2px;
-border-radius: 20px; */
-}
+    .joke{
+        display: flex;
+        position: relative;
+        justify-content: space-between;
+        width: 90%;
+        height: 70%;
+        background-color: rgba(255, 255, 255, 0.507);
+        border-style: solid;
+        border-color: #ffffff;
+        border-width: 2px;
+        border-radius: 15px;
+        flex: 5;
 
-.joke{
-display: flex;
-position: relative;
-justify-content: space-between;
-/* align-items: center; */
-/* text-align: center; */
-width: 90%;
-height: 70%;
-/* margin: 1rem; */
-background-color: rgba(255, 255, 255, 0.507);
-border-style: solid;
-border-color: #ffffff;
-border-width: 2px;
-border-radius: 15px;
-flex: 5;
-
-}
+    }
 
 
-#jokeSideBtn {
-width: 6rem;
-height: 4rem;
-padding: 0.4rem;
-border-radius: 20px;
-border-color: #ffffff;
-background-color: rgba(255, 255, 255, 0.407);
-border-style: solid;
-border-width: 2px;
-}
+    #jokeSideBtn {
+        width: 6rem;
+        height: 4rem;
+        padding: 0.4rem;
+        border-radius: 20px;
+        border-color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.407);
+        border-style: solid;
+        border-width: 2px;
+    }
 
-.jokeratingbtn{
-display: flex;
-justify-content: center;
-align-items: center;
-width: 60%;
-height: 100%;
-margin-bottom: 2rem;
-/* padding-left: 2rem; */
+    .jokeratingbtn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60%;
+        height: 100%;
+        margin-bottom: 2rem;
+    }
 
-/* margin-top: 1.5rem; */
-/* flex: 5; */
-}
+    .jokeratingbtn button{
+        border-radius: 20px;
+        border-color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.407);
+        border-style: solid;
+        border-width: 2px;
 
-.jokeratingbtn button{
+        width: 45%;
+        height: 2.5rem;
+        margin-left: 0.3rem;
+        margin-right: 0.3rem; 
 
-  border-radius: 20px;
-border-color: #ffffff;
-background-color: rgba(255, 255, 255, 0.407);
-border-style: solid;
-border-width: 2px;
+    }
 
-width: 45%;
-height: 2.5rem;
-margin-left: 0.3rem;
-margin-right: 0.3rem; 
 
-}
+    ::-webkit-scrollbar{
+    /* border-radius: 2px; */
+    width: 10px;
+    }
+
+    ::-webkit-scrollbar-track{
+    /* border-radius: 20px; */
+    background: rgb(207, 207, 207);  
+    border-radius: 2rem;
+    }
+
+    ::-webkit-scrollbar-thumb{
+    /* height: 2px; */
+    border-radius: 2rem;
+    /* background: rgb(154, 152, 152); */
+    background: rgb(255, 255, 255);
+    }
+
+    ::-webkit-scrollbar-thumb:hover{
+    background: rgb(255, 255, 255);
+    }
 
 </style>
   
