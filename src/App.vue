@@ -1,22 +1,9 @@
-<script setup>
-
-// import Home from './components/Home.vue';
-// import questionaire from './components/questionaire.vue';
-// import DadJokes from './components/DadJokes.vue';
-// import Happy from './components/Happy.vue';
-// import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <!-- <home></home> -->
-  <!-- <questionaire></questionaire> -->
-  <!-- <questions></questions> -->
-  <!-- <DadJokes></DadJokes> -->
-  <!-- <happy></happy> -->
-  <router-view></router-view>
-  <!-- state management: vueX 
-        for global variables -->
+  <router-view ></router-view>
+  <!-- <div class="speech-bubble">Sign up now!</div> -->
 </template>
+
+
 
 <style>
 *{
@@ -24,7 +11,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box; /*what*/
+  font-family: 'Poppins';
+  /* line-height: 20px; */
 }
+
 
 
 /* background design !!! */
@@ -40,7 +30,7 @@ main{
 }
 
 .glass {
-  background: white;
+  /* background: white; */
   min-height: 80vh;
   width: 60%;
   background: linear-gradient(
@@ -50,7 +40,7 @@ main{
   );
   /* background: rgba(255, 255, 255, 0.333); */
   border-radius: 2rem;
-  border: 2px solid white;
+  /* border: 2px solid white; */
   z-index: 2;
   backdrop-filter: blur(10px);
   display: flex;

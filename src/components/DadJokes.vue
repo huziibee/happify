@@ -15,8 +15,6 @@ export default {
     start: true,
     checkpoints: false,
     completed: 0,
-    coops:0,
-
     };
   },
 
@@ -28,22 +26,12 @@ export default {
     },
 
     complete(){
-      if (this.completed===5){
+      if (this.completed===4){
         this.next=false;
       }
     },
 
     started(){
-      // this.setup='moop';
-      // this.punchline='moop2';
-      console.log("Window Location:" , window.location);
-      const mykv = window.location.search;
-      console.log("key & vals:", mykv);
-      const url= new URLSearchParams(mykv);
-      const q =url.get('points');
-      this.points= parseInt(q);
-      this.coops = parseInt(url.get('comps'))+30;
-
       this.fetchData();
       this.start=false;
     },
@@ -60,10 +48,17 @@ export default {
     },
 
     sub(){
-      // this.setup='j'
-      console.log(this.points);
-      this.$router.push('/?points='+this.points+'&comps='+this.coops);
+      // console.log(this.points);
+      if (this.checkpoints){
+        this.points+=this.point;
+        let x = Math.floor(Math.random()*10)+1;
+        this.$store.state.points+=((this.points*3)+x);
+        
+        this.$store.state.DadCompleted='Completed';
+        this.$store.state.dadPage='/';
+        this.$router.push('/');
       // this.$router.push('/');
+    }
 
     },
 
@@ -138,7 +133,7 @@ export default {
                             <br>
 
                             <div id="punch">
-                                <p id="punchlineid">{{ punchline }}</p>
+                                <h3 id="punchlineid">{{ punchline }}</h3>
                             </div>
 
                             </div>

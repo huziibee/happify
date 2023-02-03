@@ -46,13 +46,10 @@ export default {
         },
         
       takePicture() {
-        for (let i=0;i<1;i++){
-            console.log('moop');
-              
-              
+                            
               let context = this.canvas.getContext('2d')
               context.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight)
-        this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
+        
         
         var data = this.canvas.toDataURL('image/jpeg');
         var base64Image = data.replace(/^data:image\/(png|jpeg|jpg);base64,/, '');
@@ -65,7 +62,7 @@ export default {
           },
           Attributes: ["ALL"],
         };
-        console.log(params);
+        // console.log(params);
 
         rekognition
         .detectFaces(params)
@@ -84,14 +81,31 @@ export default {
               (item) => item.Type === "HAPPY"
               )[0]["Confidence"];
               console.log(rekHappyScore);
+              if (this.prog<rekHappyScore){
+                this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
+              }
               this.prog=rekHappyScore;
+              this.total+=this.prog;
+              if(this.prog<25){
+                this.prog+=10;
+              }
+              else if(this.prog<50){
+                this.prog+=8;
+              }
+              else if(this.prog>55){
+                this.prog-=8;
+              }
+              else if(this.prog>85){
+                this.prog-=12;
+              }
+              // this.prog=0;
             }
             else{
               console.log('faces not found');
             }
           }).catch((err) => console.log(err, err.stack));
           
-        }},
+        },
         
         
         initCanvas() {
@@ -114,28 +128,22 @@ export default {
         if(this.On!=='none'){
           this.start=false;
           this.subtit='Detecting Happiness';
-            // this.takePicture();
-          const that=this;
+          // const that=this;
           for (let i=0;i<10;i++){
-            console.log('moop');
-            await this.sleep();
             this.takePicture();
-            // setTimeout(function(){
-            //   that.takePicture();
-            //     // that.counter=0;
-            // },4000);
+            await this.sleep();
           }
-
-          console.log("Window Location:" , window.location);
-          const mykv = window.location.search;
-          console.log("key & vals:", mykv);
-          const url= new URLSearchParams(mykv);
-          const q =url.get('points');
-          this.points= parseInt(q);
+          this.finished();
         }
       },
       finished(){
-        this.$router.push('/?points=');
+        this.$store.state.meterPage='/';
+        this.$store.state.MeterCompleted='Completed';
+        let x = Math.floor(Math.random()*10)+1;
+        this.$store.state.points+=(Math.round((this.total/100)*1.5)+x);
+
+        // console.log(this.total);
+        this.$router.push('/');
       }
   },
 
@@ -147,6 +155,8 @@ export default {
         On: 'none',
         but: false,
         prog: 30,
+        befprog: 0,
+        total: 0,
         start: true,
         subtit: 'Incomplete',
       }
@@ -182,8 +192,11 @@ export default {
 
                     <progress style="margin-right: 1rem; height: 2rem;" :value="prog" max="100">30%</progress>
 
-                    <a @click="takePicture()">
-                      <img @click="pro" src="../assets/Happy/happy-face.png" id="happySideBtn">
+                    <a>
+                      <img v-if="this.prog<=15" src="../assets/Happy/sad.png" id="happySideBtn">
+                      <img v-else-if="this.prog<=45" src="../assets/Happy/happy.png" id="happySideBtn">
+                      <img v-else-if="this.prog<=85" src="../assets/Happy/happier.png" id="happySideBtn">
+                      <img v-else src="../assets/Happy/happiest.png" id="happySideBtn">
                     </a>
 
                   </div>
@@ -198,8 +211,9 @@ export default {
 
                   <div class="happy">
                     
-                    <div class="toggles">
-                        <img v-if="start" @click="toggle()" id="toggles" src="../assets/Happy/no-camera.png" alt="">
+                    <div v-if="start" @click="toggle()" class="toggles">
+                        <img v-if="this.On==='none'"  id="toggles" src="../assets/Happy/video-camera.png">
+                        <img v-else id="toggles" src="../assets/Happy/no-camera.png">
 
                     </div>
 

@@ -1,179 +1,153 @@
 <script>
-
   export default {
     name: 'Home',
+
 	data() {
     return {
-        Queststats: 'Incomplete',
-        Funstats: 'Incomplete',
-        Dadstats: 'Incomplete',
-        Happystats: 'Incomplete',
-        num: 0,
-        compsso: '0000',
-    }},
-  methods:{
-    comps(pos){
-      this.pointsgetter();
-      for(let i=1;i<5;i++){
-        if(pos===i){
-          this.compsso[i-1]=i;
-        }
-      }
-    },
-    checker(){
-      // console.log("Window Location:" , window.location);
-      const mykv = window.location.search;
-      // console.log("key & vals:", mykv);
-      const url= new URLSearchParams(mykv);
-      // const score =url.get('points');
-      var p =url.get('points');
-      var compss =url.get('comps');
-      // this.compsso=compss;
-      
-      // console.log('l');
-      // var compss=this.compsso;
-      if(compss===null){
-        compss='0000';
-        // this.compsso=compss;
-      }
-      if(p===null){
-        p=0;
-        // this.compsso=compss;
-      }
-      
-      this.num=p;
-      this.compsso=compss;
-      console.log(p);
-      console.log(compss);
-      for(let i=0;i<4;i++){
-      if(compss[i]==='1'){
-          this.Queststats='Completed';
-        }
-      if(compss[i]==='2'){
-          this.Funstats='Completed';
-        }
-      if(compss[i]==='3'){
-          this.Dadstats='Completed';
-        }
-      if(compss[i]==='4'){
-          this.Happystats='Completed';
-        }}
-    },
-    pointsgetter(){
-      console.log("Window Location:" , window.location);
-      const mykv = window.location.search;
-      console.log("key & vals:", mykv);
-      const url= new URLSearchParams(mykv);
-      const score =url.get('points');
-      // turn points sytem into strings to add encripts
-
-      console.log(url);
-      console.log(compss);
-      if (score!==null){
-        this.num+=parseInt(score);
-      }
-
-
-      console.log(score);
-      console.log(this.num);
-      // this.compsso=parseInt(this.compsso);
+        complete: 'Completed',
     }
+  },
+
+  methods:{
+    res(){
+      if (this.$store.state.QuestCompleted===this.complete && 
+      this.$store.state.VideosCompleted===this.complete && 
+      this.$store.state.DadCompleted===this.complete && 
+      this.$store.state.MeterCompleted===this.complete)
+      {
+        return true;
+      }
+      // return true;
+    },
   }
 }
-
 </script>
 
 <template>
 <body>
-    <main @mouseover="checker()">
+    <main>
 
         <section class="glass">
+
             <div class="dash">
+
                 <div class="user">
+                  
+                  <div class="imgbrd">
                     <img  src="../assets/Homepage/hexagon.png" alt="logo" id="logo">
+                  </div>
+
                     <div class="o">
                       <h3>Happify</h3>
-                    <p>by synthesis</p>
+                      <p>by synthesis</p>
+                      <!-- <p>{{ this.$store.state.points }}</p> -->
                   </div>
+
                 </div>
 
                 <nav id="homeNavOpts">
-                    <a class="pages" href="#">
-                        <img src="../assets/Homepage/home.png" id="home">
-                        <h2>Home</h2>
+
+                    <a class="pages" href="https://youtu.be/dQw4w9WgXcQ">
+                        <img src="../assets/Homepage/user.png" id="home">
+                        <h3>Profile</h3>
                         <!-- profile, settings add one more thing -->
                     </a>
 
-                    <a class="pages" href="#">
-                      <img src="../assets/Homepage/box.png">
-                        <h2>Products</h2>
+                    <a class="pages" href="https://youtu.be/dQw4w9WgXcQ">
+                      <img style="padding:5px;" src="../assets/Homepage/setting (6).png">
+                        <h3>Settings</h3>
                     </a>
 
-                    <a class="pages" href="#">
-                      <img src="../assets/Homepage/about us icon.png">
-                        <h2>About Us</h2>
+                    <a class="pages" href="https://youtu.be/dQw4w9WgXcQ">
+                      <img style="padding:5px;" src="../assets/Homepage/mail.png">
+                        <h3>Socials</h3>
+                    </a>  
+
+                    <a class="pages" href="https://youtu.be/dQw4w9WgXcQ">
+                      <img style="padding:5px;" src="../assets/Homepage/about us icon.png">
+                        <h3>About Us</h3>
                     </a>      
                     
                   </nav>
-                  <a class="pro" href="https://www.flaticon.com/search/2?word=hexagon">
+
+                  <a class="pro" href="https://youtu.be/dQw4w9WgXcQ">
                     <h2>More Apps!</h2>
                     <img src="../assets/Homepage/dance.png" alt="">
                   </a>
+
                 </div>
                 
                 <div class="main">
                   
                   <div class="topper">
                     <h1 style="display:inline-block;">Welcome</h1>
-                    <div v-if="compsso==='1234'" class="leader">
-                      <button href="#" id="lead"><p>Results</p></button>
-                    </div>
-                    
 
-              </div>
+                    <router-link v-if="res()" class="leader" to="/results">
+                      <h3 id="lead">Results</h3>
+                    </router-link>
+
+                  </div>
               
             
               <div class="cards">
 
                 <div class="pairOfCards">
 
-                  <router-link class="card" :to="'/questionaire?points='+num+'&comps='+compsso">
+                  <router-link class="card" :to=this.$store.state.questPage>
 
                     <img src="../assets/Homepage/questionnaire.png">
+
                     <div class="info">
                       <h2>Questionaire</h2>
-                      <p>{{ Queststats }}</p>
+                      <p>{{ this.$store.state.QuestCompleted }}</p>
                     </div>
+
                   </router-link>
-                  <router-link class="card" :to="'/funnyvideos?points='+num+'&comps='+compsso">
-                  <img src="../assets/Homepage/video-camera.png">
-                  <div class="info">
-                    <h2>Funny videos</h2>
-                    <p>{{ Funstats }}</p>
-                  </div>
+
+                  <router-link class="card" :to=this.$store.state.videoPage>
+
+                    <img src="../assets/Homepage/video-camera.png">
+                    
+                    <div class="info">
+                      <h2>Funny videos</h2>
+                      <p>{{ this.$store.state.VideosCompleted }}</p>
+                    </div>
+
                   </router-link>
+
                 </div>
+                
                 <div class="pairOfCards">
-                  <router-link class="card" :to="'/dadjokes?points='+num+'&comps='+compsso">
+
+                  <router-link class="card" :to=this.$store.state.dadPage>
+                    
                     <img src="../assets/Homepage/joke.png">
+                    
                     <div class="info">
                       <h2>Dad jokes</h2>
-                      <p>{{ Dadstats }}</p>
+                      <p>{{ this.$store.state.DadCompleted }}</p>
                     </div>
+                  
                   </router-link>
-                  <router-link class="card" :to="'/happymeter?points='+num+'&comps='+compsso">
-                  <img src="../assets/Homepage/rating.png">
-                  <div class="info">
-                    <h2>Happiness meter</h2>
-                    <p>{{ Happystats }}</p>
-                  </div>
+                  
+                  <router-link class="card" :to=this.$store.state.meterPage>
+                    <!-- <img :src="imageSrc" alt=""> -->
+                    
+                    <img src="../assets/Homepage/rating.png">
+                    
+                    <div class="info">
+                      <h2>Happiness meter</h2>
+                      <p>{{ this.$store.state.MeterCompleted }}</p>
+                    </div>
+                  
                   </router-link>
                   
                 </div>
 
-
               </div>
+
             </div>
+
         </section>
     </main>
 
@@ -195,12 +169,17 @@
   justify-content: space-between;
 }
 
-
 .glass{
   flex-direction: row;
 }
 
+a {
+  text-decoration: none;
+}
 
+*{
+  /* color: white; */
+}
 
 .dash{
   flex: 1;
@@ -211,28 +190,36 @@
   text-align: center;
   background: linear-gradient(rgba(255, 255, 255, 0.4),rgba(255, 255, 255, 0.3));
   border-radius: 2rem;
+  
 }
 
 /* change */
 #logo {
   width: 3rem;
   height: 3rem;
-  padding: 2px;
+  /* padding: 8px; */
   /* border-radius: 50%; */
-  margin-right: 2rem;
   /* transform: rotate(-40deg); */
+}
+
+.imgbrd{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2rem;
+  padding: 8px;
+  /* padding-right: 0px; */
+  border-radius: 50%;
+  /* background: linear-gradient(rgba(255, 255, 255, 0.4),rgba(255, 255, 255, 0.3)); */
 }
 
 .user{
   display: flex;
   text-align: left;  
   align-items: center;
-  /* margin-right: 5rem; */
-}
+  margin-right: 5rem;
+  line-height: 22px;
 
-.user img{
-
-  /* height: 6rem; */
 }
 
 .pages img {
@@ -256,10 +243,6 @@
   padding: 0.5rem;
 }
 
-hr {
-  padding: 0.2px;
-  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.6),rgba(255, 255, 255, 0.6));
-}
 
 /* change */
 .pages{
@@ -287,6 +270,8 @@ hr {
   color: yellow;
   background-image: linear-gradient(-90deg,#f5cb42,#d24103);
   border-radius: 2rem;
+  line-height: 27px;
+
 }
 
 .pro img{
@@ -304,6 +289,7 @@ hr {
 
 h1{
   font-weight: 600;
+  color: #ffffffa2;
   opacity: 0.8;
   font-size: 3rem;
   padding-top: 2rem;
@@ -312,7 +298,7 @@ h1{
   /* margin: 0; */
 }
 
-p{
+p {
   color: rgb(71, 70, 70);
 }
 
@@ -333,6 +319,8 @@ p{
 
 .card{
   text-decoration: none;
+  line-height: 25px;
+
   color: #000;
   display: flex;
   flex-direction: column;
@@ -359,17 +347,35 @@ p{
 
 }
 
+@keyframes glow {
+  from {
+    background-position: 0%;
+  }
+  to {
+    background-position: 100%;
+  }
+}
+
 .card:active{
   background-image: linear-gradient(rgba(255, 255, 255, 0.583),rgba(255, 255, 255, 0.387));
 
 }
 
 .card:hover , #lead:hover , .pages:hover{
-  background-image: linear-gradient(rgba(255, 255, 255, 0.583),rgba(255, 255, 255, 0.387));
+  /* background-image: linear-gradient(to top,rgba(255, 255, 255, 0.357),rgba(255, 255, 255, 0.198)); */
   border-color: #ffffff;
   border-style: solid;
   border-width: 2px;
+  background-size: 100%;
+  transform: translateY(-2px);
+  /* animation: glow 2s linear forwards; */
+  
 }
+
+.pages:hover{
+  background-image: linear-gradient(rgba(255, 255, 255, 0.357),rgba(255, 255, 255, 0.198));
+}
+
 
 /* #home{
   border-color: #ffffff;
@@ -390,8 +396,13 @@ p{
   /* align-items: center; */
 }
 
+
 #lead{
   /* display: none; */
+  color: rgba(226, 221, 221, 0.747);
+  color: #ffffffa2;
+
+  /* color: linear-gradient(white,orange); */
   text-decoration: none;
   text-align: center;
   width: 17rem;
@@ -400,7 +411,7 @@ p{
   margin-bottom: 0px;
   padding: 0.4rem;
   border-radius: 20px;
-  border-color: #ffffff;
+  border-color: transparent;
   background-color: rgba(255, 255, 255, 0.407);
   border-style: solid;
   border-width: 2px;

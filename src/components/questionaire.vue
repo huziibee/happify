@@ -7,9 +7,6 @@ import HelloWorld from './components/HelloWorld.vue'
 export default {
   
 	name: 'Questionaire',
-	props: {
-		msg: Number,
-	},
 	data() {
     return {
 
@@ -20,13 +17,12 @@ export default {
     point: 0,
     points: 0,
     next: true,
-    start: true,
     checkpoints: false,
+    submitable: false,
     completed: 0,
     coops: '',
 
     q:[
-      '1. Do you often find yourself wanting more?',
       '2. Are you a perfectionist?',
       "3. Did you work your hardest to get to the point at which you're at right now?",
       '4. Do you have an end goal, and are you actively on the right path to achieve it?',
@@ -38,7 +34,6 @@ export default {
       '10. If your life were to remain the way it is right now, forever, would you be able to stand it?',
     ],
     a:[
-      "To be truly content with your life at any stage, you must learn to work for higher goals, while still accepting what you currently have.<br><br>Welcome more, but don’t covet it.",
       "Although striving for the best is good motivation, setting a bar for perfection will set you up for failure.<br><br>This will inevitably leave you unhappy with your current situation.",
       "A trick to being happy is being able to look back and realize that everything in front of you is a result of the hard work you did.<br><br>If this isn’t the case, it’s never too late.<br><br>Work hard today, and you’ll reap the benefits tomorrow (even if those benefits are just coming home to a clean house).",
       "Having a goal and desiring more are two different concepts.<br><br>If you’re actively on the path to achieving a goal, you’ll feel much more satisfied with every advancement you achieve.<br><br>Therefore, you'll be happy with every little difference, no matter how small it is.",
@@ -49,8 +44,8 @@ export default {
       "This may sound obvious, but sometimes, we don’t even realize we’re overcome with negative emotion until there’s a profound absence of it.<br><br>Remember to allow more things in your life that will make you laugh or smile to override the few things that are bound to make you cry.",
       "Things will change. But this is the ultimate test to see if you’re content with your current situation.<br><br>This is the product of all the previous questions.<br><br>If you answer"+ ' "yes" '+ "to this, you’re ready for anything life throws your way.<br><br>If you answer "+' "no," '+" it’s time to make some changes in your life that will help you grow as a person and allow yourself the opportunity to be comfortable with your place in the world.<br><br>Happiness is something we have to learn to welcome into our lives. We can’t just expect it.<br><br>That’s the problem we often face. We expect happiness to come without any effort.<br><br>Life is about perspective.<br><br>All of these questions can have positive answers regardless of your current situation, as long as you have the proper perspective and outlook on life.<br><br>Sometimes, all we need is a little attitude adjustment. I know I do.<br><br>Choose to be happy, my friends.",
     ],
-    qstr: '',
-    astr: '',
+    qstr: '1. Do you often find yourself wanting more?',
+    astr: "To be truly content with your life at any stage, you must learn to work for higher goals, while still accepting what you currently have.<br><br>Welcome more, but don’t covet it.",
     
 
     };
@@ -64,31 +59,17 @@ export default {
     },
 
     complete(){
-      if (this.completed===10){
+      if (this.completed===9){
         this.next=false;
+      }
+      else {
+        this.submitable=true;
       }
     },
 
     place(){
       this.qstr=this.q[this.completed];
       this.astr=this.a[this.completed];
-    },
-
-    started(){
-      // this.setup='moop';
-      // this.punchline='moop2';
-      // this.fetchData();
-      console.log("Window Location:" , window.location);
-      const mykv = window.location.search;
-      console.log("key & vals:", mykv);
-      const url= new URLSearchParams(mykv);
-      const q =url.get('points');
-      this.coops = parseInt(url.get('comps'))+1000;
-      // console.log(compss);
-
-      this.points= parseInt(q);
-      this.place();
-      this.start=false;
     },
 
     nextbtn(){
@@ -104,10 +85,17 @@ export default {
     },
 
     sub(){
+      if (this.checkpoints){
+        this.points+=this.point;
+        let x = Math.floor(Math.random()*10)+1;
+        this.$store.state.points+=((this.points*1.5)+x);
+        this.$store.state.QuestCompleted='Completed';
+        this.$store.state.questPage='/';
+        this.$router.push('/');
+      }
       // this.setup='j'
 
-      console.log(this.points);
-      this.$router.push('/?points='+this.points+'&comps='+this.coops);
+      // console.log(this.points);
       
       // this.msg=this.points;
 
@@ -140,8 +128,7 @@ export default {
                 <div class="topleft" >
                   
                   <button id="jokeSideBtn">
-                    <h2 v-if="start" @click="started">Start</h2>
-                    <h2 v-else-if="next" @click="nextbtn">Next</h2>
+                    <h2 v-if="next" @click="nextbtn">Next</h2>
                     <h2 v-else @click="sub()">Submit</h2>
                     <!-- <img src="./assets/copy.png" > -->
 
@@ -162,17 +149,21 @@ export default {
                       <div class="textfield">
                         <div class="textcentre">
                           <h2 v-html="qstr"></h2>
-                          <label class="custom-radio-btn">
-                            <input type="radio" name="sample" @click="add(1)">
-                              <span class="label">Yes</span>
-                              <span class="checkmark"></span>
-                            </label>
+                          <div class="ra">
 
                             <label class="custom-radio-btn">
-                              <input type="radio" name="sample" @click="add(0)">
-                              <span class="label">No</span>
-                              <span class="checkmark"></span>
-                            </label>
+                              <input type="radio" name="sample" @click="add(1)">
+                                <span class="label"><h3>Yes</h3></span>
+                                <span class="checkmark"></span>
+                              </label>
+  
+                              <label class="custom-radio-btn">
+                                <input type="radio" name="sample" @click="add(0)">
+                                <span class="label"><h3>No</h3></span>
+                                <span class="checkmark"></span>
+                              </label>
+
+                          </div>
                           <!-- <div class="opts">
                             <input type="radio" id="no">
                             <label for="no"><h3>no</h3></label>
@@ -224,11 +215,17 @@ box-sizing: border-box; /*what*/
 
 }
 
-
+.ra{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-top: 7px;
+}
 
 .custom-radio-btn {
-  --size: 25px;
-  min-width: var(--size);
+  --size: 3rem;
+  min-width: 15rem;
+  max-width: 8rem;
   height: var(--size);
   border-radius: 20px;
   display: flex;
@@ -254,7 +251,7 @@ box-sizing: border-box; /*what*/
 /* label  */
 
 .custom-radio-btn .label {
-  margin-left: 2rem;
+  margin-left: 2.5rem;
 
   font-weight:bolder;
   
@@ -270,24 +267,23 @@ box-sizing: border-box; /*what*/
 
 .custom-radio-btn .checkmark {
   --gap: 3px;
-  --border: 2px;
+  --border: 12px;
   --check-color: #ffffff;
-  width: var(--size);
-  height: var(--size);
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
   display: inline-block;
   transition: opacity 0.3s ease;
   /* changes from the video  */
   
-  border: var(--border) solid  linear-gradient(
-    /* to right top, */
-    rgba(255, 255, 255, 0.144), 
-    rgba(255, 255, 255, 0.106)
-);
+
   padding: var(--gap);
   position: absolute;
-  top: 0;
-  left: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  left: 3px;
 }
 
 .custom-radio-btn.left .checkmark {
@@ -308,6 +304,7 @@ box-sizing: border-box; /*what*/
      the border(both sides) and the gap(both sides) than dividing it by 2 to get the radius of the circle        */
        calc((var(--size) - (var(--border) * 2) - (var(--gap) * 2)) / 2), 
     rgba(255, 255, 255, 0) 0);
+    /* display: none; */
 }
 
 #backbtn{
@@ -366,6 +363,8 @@ border-width: 2px;
   bottom: 1px;
   padding: 20px;
 }
+
+
 
 .topimg{
   /* display: flex; */
@@ -442,73 +441,6 @@ border-width: 2px;
 }
 
 
-/* background design !!! */
-
-main{
-
-background-image: linear-gradient(#68B0D1,#99D8F5);
-background-repeat: no-repeat;
-min-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-}
-
-.glass {
-background: white;
-min-height: 80vh;
-width: 60%;
-background: linear-gradient(
-    /* to right top, */
-    rgba(255, 255, 255, 0.144), 
-    rgba(255, 255, 255, 0.106)
-);
-/* background: rgba(255, 255, 255, 0.333); */
-border-radius: 2rem;
-border: 2px solid white;
-z-index: 2;
-backdrop-filter: blur(10px);
-display: flex;
-flex-direction: column;
-}
-
-.circle1, .circle2, .circle3 , .circle4{
-background-image: linear-gradient(#F9D45A,#F98F63);
-/* width: 20rem;
-height: 20rem; */
-/* margin: 30px; */
-position: absolute;
-border-radius: 50%;
-}
-
-.circle1 {
-top: 1%;
-right: 35%;
-width: 10rem;
-height: 10rem;
-}
-
-.circle2 {
-bottom: 5%;
-right: 5%;
-height: 15rem;
-width: 15rem;
-}
-
-.circle3 {
-bottom: -10%;
-left: 0%;
-width: 20rem;
-height: 20rem;
-}
-
-.circle4 {
-top: 2%;
-left: -13%;
-width: 20rem;
-height: 20rem;
-}
-
 
 
 .JokeTitle{
@@ -546,6 +478,7 @@ padding-left: 2rem;
 
 button:hover , #jokeSideBtn:hover{
 background-image: linear-gradient(rgba(255, 255, 255, 0.583),rgba(255, 255, 255, 0.387));
+cursor: pointer;
 border-color: #ffffff;
 border-style: solid;
 border-width: 2px;

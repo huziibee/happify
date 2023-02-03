@@ -4,65 +4,8 @@
 
 export default {
 
-  name: "Happy",
-  // name: "k",
-  mounted() {
-    this.canvas = this.$refs.canvas
-    this.video = this.$refs.video
-    this.startCapture()
-  },
-
-  methods: {
-    startCapture() {
-      navigator.mediaDevices.getUserMedia ({video: true, audio: false}).then(stream => {
-      this.video.srcObject = stream
-      this.video.play()
-      }).catch(error => {console.log(error)})
-
-    },
-    takePicture() {
-      let context = this.canvas.getContext('2d')
-      context.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight)
-      this.$emit('picture-taken', this.canvas.toDataURL('image/png'))
-    },
-    
-    initCanvas() {
-      this.canvas.setAttribute('width', this.video.videoWidth)
-      this.canvas.setAttribute('height', this.video.videoHeight)
-      },
-      toggle(){
-          // this.but=!this.but;
-          if(this.On==='none'){
-              this.On='visible';
-          }
-          else{
-              this.On='none';
-          }
-      },
-      startnow(){
-        if(this.On!=='none'){
-          this.start=false;
-          this.subtit='Detecting Happiness';
-        }
-      },
-      finished(){
-        this.$router.push('/');
-      }
-  },
-
-    data() {
-      return {
-        video: null,
-        canvas: null,
-        On: 'none',
-        but: false,
-        prog: 30,
-        start: true,
-        subtit: 'Incomplete',
-        results: 'nothing',
-      }
-
-}}
+  name: "Results",
+}
 
 </script>
 
@@ -79,25 +22,22 @@ export default {
                       </router-link>
 
                     <div>
-                        <h3>Happiness metre</h3>
-                        <p>{{ subtit }}</p>
+                        <h3>Results</h3>
+                      
                     </div>
 
                     </div>
 
                 <div class="topleft">
 
-                  <button v-if="start" id="srtbtn" @click="startnow()"><h2>Start</h2></button>
+                  <a id="rightemoji" @click="addsw()">
 
-                  <div v-else id="aftsrt">
-
-                    <progress style="margin-right: 1rem; height: 2rem;" :value="prog" max="100">30%</progress>
-
-                    <a>
-                      <img @click="pro" src="../assets/Happy/happy-face.png" id="happySideBtn">
-                    </a>
-
-                  </div>
+                    <img v-if="this.$store.state.points<=15" src="../assets/results/sad.png" id="happySideBtn">
+                    <img v-else-if="this.$store.state.points<=45" src="../assets/results/happy.png" id="happySideBtn">
+                    <img v-else-if="this.$store.state.points<=85" src="../assets/results/happier.png" id="happySideBtn">
+                    <img v-else src="../assets/results/happiest.png" id="happySideBtn">
+                  </a>
+                  
 
                 </div>
 
@@ -109,8 +49,7 @@ export default {
 
                   <div class="happy">
                     
-                    {{ results }}
-                    {{ $num }}
+                    <h2 style="text-align:center;">You have achieved a {{ this.$store.state.points }} % score <br> on the Happiness scale !!</h2>
 
                   </div>
                   

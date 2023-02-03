@@ -3,20 +3,9 @@ import HelloWorld from './components/HelloWorld.vue'
 </script> -->
 
 <script scoped>
-        console.log("Window Location:" , window.location);
-        const mykv = window.location.search;
-        console.log("key & vals:", mykv);
-        const url= new URLSearchParams(mykv);
-        const q =parseInt(url.get('points'));
-        // this.coops = parseInt(url.get('comps'))+200;
-        console.log(q);
-        console.log(url.get('comps'));
 
 export default {
 	name: 'HelloWorld',
-	props: {
-		msg: String
-	},
 	data() {
     return {
 
@@ -29,8 +18,7 @@ export default {
     pos: 1,
     next: true,
     checkpoints: false,
-    completed: 1,
-    coops:0,
+    completed: 0,
 
     };
   },
@@ -43,7 +31,7 @@ export default {
     },
 
     complete(){
-      if (this.completed===5){
+      if (this.completed===4){
         this.next=false;
       }
     },
@@ -60,16 +48,16 @@ export default {
     },
 
     sub(){
-        // console.log("Window Location:" , window.location);
-        const mykv = window.location.search;
-        // console.log("key & vals:", mykv);
-        const url= new URLSearchParams(mykv);
-        const q =parseInt(url.get('points'));
-        this.coops = parseInt(url.get('comps'))+200;
-        this.points+=q+1;
+        if (this.checkpoints){
+        this.points+=this.point;
+        let x = Math.floor(Math.random()*10)+1;
+        this.$store.state.points+=((this.points*3)+x);
+        this.$store.state.videoPage='/';
+        this.$router.push('/');
+        this.$store.state.VideosCompleted='Completed';
+        }
 
-        console.log(this.points);
-      this.$router.push('/?points='+this.points+'&comps='+this.coops);
+        // console.log(this.points);
       // this.setup='j'
 
     },
@@ -92,7 +80,7 @@ export default {
 
                       <div class="o">
                         <h3>Funny Videos</h3>
-                        <p> {{completed -1}}/5 Completed</p>
+                        <p> {{completed}}/5 Completed</p>
                     </div>
                 </div>
 
@@ -114,11 +102,11 @@ export default {
 
                   
                   <div class="videopart">
-                    <video v-if="1==pos" class="vidsc" src="../assets/video/1.mp4" controls></video>
-                    <video v-else-if="2==pos" class="vidsc" src="../assets/video/2.mp4" controls></video>
-                    <video v-else-if="3==pos" class="vidsc" src="../assets/video/3.mp4" controls></video>
-                    <video v-else-if="4==pos" class="vidsc" src="../assets/video/4.mp4" controls></video>
-                    <video v-else-if="5==pos" class="vidsc" src="../assets/video/5.mp4" controls></video>
+                    <video v-if="1==pos" class="vidsc" src="../assets/video/1.mp4" autoplay controls></video>
+                    <video v-else-if="2==pos" class="vidsc" src="../assets/video/2.mp4" autoplay controls></video>
+                    <video v-else-if="3==pos" class="vidsc" src="../assets/video/3.mp4" autoplay controls></video>
+                    <video v-else-if="4==pos" class="vidsc" src="../assets/video/4.mp4" autoplay controls></video>
+                    <video v-else-if="5==pos" class="vidsc" src="../assets/video/5.mp4" autoplay controls></video>
                   </div>
                   
                 </div>
@@ -198,74 +186,6 @@ border-width: 2px;
 
 
 
-/* background design !!! */
-
-main{
-
-background-image: linear-gradient(#68B0D1,#99D8F5);
-background-repeat: no-repeat;
-min-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-}
-
-.glass {
-background: white;
-min-height: 80vh;
-width: 60%;
-background: linear-gradient(
-    /* to right top, */
-    rgba(255, 255, 255, 0.144), 
-    rgba(255, 255, 255, 0.106)
-);
-/* background: rgba(255, 255, 255, 0.333); */
-border-radius: 2rem;
-border: 2px solid white;
-z-index: 2;
-backdrop-filter: blur(10px);
-display: flex;
-flex-direction: column;
-}
-
-.circle1, .circle2, .circle3 , .circle4{
-background-image: linear-gradient(#F9D45A,#F98F63);
-/* width: 20rem;
-height: 20rem; */
-/* margin: 30px; */
-position: absolute;
-border-radius: 50%;
-}
-
-.circle1 {
-top: 1%;
-right: 35%;
-width: 10rem;
-height: 10rem;
-}
-
-.circle2 {
-bottom: 5%;
-right: 5%;
-height: 15rem;
-width: 15rem;
-}
-
-.circle3 {
-bottom: -10%;
-left: 0%;
-width: 20rem;
-height: 20rem;
-}
-
-.circle4 {
-top: 2%;
-left: -13%;
-width: 20rem;
-height: 20rem;
-}
-
-
 
 .VideoTitle{
 display: flex;
@@ -294,6 +214,7 @@ padding-left: 2rem;
 
 button:hover , #videoSideBtn:hover{
 background-image: linear-gradient(rgba(255, 255, 255, 0.583),rgba(255, 255, 255, 0.387));
+cursor: pointer;
 border-color: #ffffff;
 border-style: solid;
 border-width: 2px;
@@ -354,6 +275,7 @@ margin-bottom: 2rem;
 .videoratingbtn button{
 
   border-radius: 20px;
+  /* font-weight: 600; */
 border-color: #ffffff;
 background-color: rgba(255, 255, 255, 0.407);
 border-style: solid;
@@ -363,6 +285,12 @@ width: 45%;
 height: 2.5rem;
 margin-left: 0.3rem;
 margin-right: 0.3rem; 
+
+}
+
+button:active{
+  background-image: linear-gradient(rgba(255, 255, 255, 0.583),rgba(255, 255, 255, 0.387));
+
 
 }
 
