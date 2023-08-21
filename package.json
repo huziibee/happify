@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "buildpackage": "vite build",
+    "build": "npm install",
+    "deploy": "git add . && git commit -m \"Initial commit\" && git push origin master",
+    "start" : "npm run dev",
     "preview": "vite preview"
   },
   "dependencies": {

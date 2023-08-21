@@ -54,7 +54,7 @@
                     </a>
 
                     <a class="pages" href="https://youtu.be/dQw4w9WgXcQ">
-                      <img style="padding:5px;" src="../assets/Homepage/setting (6).png">
+                      <img style="padding:5px;" src="../assets/Homepage/settingss.png">
                         <h3>Settings</h3>
                     </a>
 
@@ -64,7 +64,7 @@
                     </a>  
 
                     <a class="pages" href="https://youtu.be/dQw4w9WgXcQ">
-                      <img style="padding:5px;" src="../assets/Homepage/about us icon.png">
+                      <img style="padding:5px;" src="../assets/Homepage/about_us_icon.png">
                         <h3>About Us</h3>
                     </a>      
                     

@@ -143,7 +143,7 @@ export default {
                   
                   <div class="joke">
                     <div class="topimg">
-                      <img src="../assets/Questions/question-and-answer (3).png" id="topim">
+                      <img src="../assets/Questions/question-and-answers.png" id="topim">
 
                     </div>
                       <div class="textfield">
@@ -186,7 +186,7 @@ export default {
                         </div>
                       </div>
                       <div class="bottomimg">
-                        <img src="../assets/Questions/question-and-answer (3).png" >
+                        <img src="../assets/Questions/question-and-answers.png" >
 
                       </div>
 
